@@ -489,13 +489,20 @@ with pie_cols[0]:
             color_discrete_sequence=["#8A8A8A", "#FFC0CB", "#3A3B3C", "#556B2F"]
         )
 
+    # Universal Plotly configuration adjustment to prevent Python 3.14 validation errors
     fig_pie.update_layout(
         margin=dict(l=10, r=10, t=10, b=10),
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
-        font_family="Inter",
-        font_color="#1A1A1A",
-        legend=dict(orientation="v", yanchor="center", y=0.5, xanchor="left", x=1.02, font=dict(size=12))
+        font=dict(family="Inter", color="#1A1A1A"), # Safe consolidated font mapping
+        legend=dict(
+            orientation="v", 
+            yanchor="center", 
+            y=0.5, 
+            xanchor="left", 
+            x=1.02, 
+            font=dict(size=12)
+        )
     )
     
     fig_pie.update_traces(
@@ -514,6 +521,4 @@ with pie_cols[1]:
         </p>
         <p style="font-size: 0.85rem; color: #76746E; font-style: italic; line-height: 1.5; border-left: 2px solid #EBE9E1; padding-left: 12px; margin-bottom: 0;">
             <strong>Pro Tip:</strong> High-impact flash trends should never occupy more than 15% of your manufacturing volume, while Stable Cores can safely hold up to 60%.
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
+        </p
