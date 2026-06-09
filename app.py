@@ -94,7 +94,7 @@ st.write("---")
 
 
 # ==============================================================================
-# 4. MOODBOARD GRID SYSTEM (Updated for 3-color palettes)
+# 4. MOODBOARD GRID SYSTEM (With 3-Image Pinterest Collage)
 # ==============================================================================
 st.subheader("Current Aesthetics Overview")
 
@@ -103,7 +103,7 @@ cols = st.columns(3)
 
 for index, row in df.iterrows():
     with cols[index % 3]:
-        # Pack everything into a single HTML block string
+        # Injecting the collage template into each card block
         card_html = f"""
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600&display=swap');
@@ -111,12 +111,39 @@ for index, row in df.iterrows():
             .aesthetic-card {{
                 background: #FFFFFF;
                 border: 1px solid #EBE9E1;
-                border-radius: 8px;
-                padding: 24px;
+                border-radius: 12px;
+                overflow: hidden; /* Clips image corners to match card border */
                 font-family: 'Inter', sans-serif;
                 color: #1A1A1A;
                 box-shadow: 0 4px 20px rgba(26, 26, 26, 0.02);
+                margin-bottom: 24px;
             }}
+            
+            /* Pinterest-Style Layout Engine */
+            .moodboard-collage {{
+                display: grid;
+                grid-template-columns: 1.8fr 1fr;
+                grid-template-rows: 105px 105px;
+                gap: 4px; /* Crisp gap line between images */
+                background: #EBE9E1;
+                height: 214px;
+                width: 100%;
+            }}
+            
+            .collage-img {{
+                width: 100%;
+                height: 100%;
+                object-fit: cover; /* Keeps fashion assets from stretching */
+            }}
+            
+            .img-main {{
+                grid-row: span 2; /* Forces first image to stretch top-to-bottom */
+            }}
+            
+            .card-content {{
+                padding: 20px 24px 24px 24px;
+            }}
+            
             h3 {{
                 font-family: 'Playfair Display', serif !important;
                 font-weight: 400 !important;
@@ -124,11 +151,13 @@ for index, row in df.iterrows():
                 font-size: 1.6rem;
                 color: #1A1A1A;
             }}
+            
             .palette-container {{
                 display: flex;
                 align-items: center;
                 gap: 6px;
             }}
+            
             .color-dot {{
                 height: 20px;
                 width: 20px;
@@ -136,6 +165,7 @@ for index, row in df.iterrows():
                 display: inline-block;
                 border: 1px solid rgba(0, 0, 0, 0.08);
             }}
+            
             hr {{
                 border: 0;
                 border-top: 1px solid #EBE9E1;
@@ -144,39 +174,48 @@ for index, row in df.iterrows():
         </style>
         
         <div class="aesthetic-card">
-            <div style="display: flex; justify-content: space-between; font-size: 0.75rem; text-transform: uppercase; color: #76746E; letter-spacing: 0.08em; margin-bottom: 12px;">
-                <span>{row['LongevityPredictor']}</span>
-                <span>{row['Season']}</span>
+            <div class="moodboard-collage">
+                <img class="collage-img img-main" src="{row['Image1']}" alt="Main Frame">
+                <img class="collage-img" src="{row['Image2']}" alt="Detail Frame A">
+                <img class="collage-img" src="{row['Image3']}" alt="Detail Frame B">
             </div>
             
-            <h3>{row['Aesthetic']}</h3>
-            
-            <p style="font-size: 0.92rem; color: #4A4A4A; line-height: 1.5; font-style: italic; margin-bottom: 18px;">
-                "{row['VibeCheck']}"
-            </p>
-            
-            <div style="font-size: 0.85rem; line-height: 1.6; color: #1A1A1A; margin-bottom: 6px;">
-                <strong style="text-transform: uppercase; font-size: 0.75rem; color: #76746E; letter-spacing: 0.03em;">Essentials:</strong> {row['CoreElements']}
-            </div>
-            <div style="font-size: 0.85rem; line-height: 1.6; color: #1A1A1A; margin-bottom: 18px;">
-                <strong style="text-transform: uppercase; font-size: 0.75rem; color: #76746E; letter-spacing: 0.03em;">Key Brands:</strong> {row['KeyBrands']}
-            </div>
-            
-            <hr>
-            
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span style="text-transform: uppercase; font-size: 0.75rem; color: #76746E; letter-spacing: 0.03em; font-weight: 500;">Palette:</span>
-                <div class="palette-container">
-                    <span class="color-dot" style="background-color: {row['Color1']};" title="{row['Color1']}"></span>
-                    <span class="color-dot" style="background-color: {row['Color2']};" title="{row['Color2']}"></span>
-                    <span class="color-dot" style="background-color: {row['Color3']};" title="{row['Color3']}"></span>
+            <div class="card-content">
+                <div style="display: flex; justify-content: space-between; font-size: 0.75rem; text-transform: uppercase; color: #76746E; letter-spacing: 0.08em; margin-bottom: 12px;">
+                    <span>{row['LongevityPredictor']}</span>
+                    <span>{row['Season']}</span>
+                </div>
+                
+                <h3>{row['Aesthetic']}</h3>
+                
+                <p style="font-size: 0.92rem; color: #4A4A4A; line-height: 1.5; font-style: italic; margin-bottom: 18px;">
+                    "{row['VibeCheck']}"
+                </p>
+                
+                <div style="font-size: 0.85rem; line-height: 1.6; color: #1A1A1A; margin-bottom: 6px;">
+                    <strong style="text-transform: uppercase; font-size: 0.75rem; color: #76746E; letter-spacing: 0.03em;">Essentials:</strong> {row['CoreElements']}
+                </div>
+                
+                <div style="font-size: 0.85rem; line-height: 1.6; color: #1A1A1A; margin-bottom: 18px;">
+                    <strong style="text-transform: uppercase; font-size: 0.75rem; color: #76746E; letter-spacing: 0.03em;">Key Brands:</strong> {row['KeyBrands']}
+                </div>
+                
+                <hr>
+                
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <strong style="text-transform: uppercase; font-size: 0.75rem; color: #76746E; letter-spacing: 0.03em;">Palette:</strong>
+                    <div class="palette-container">
+                        <span class="color-dot" style="background-color: {row['Color1']};" title="{row['Color1']}"></span>
+                        <span class="color-dot" style="background-color: {row['Color2']};" title="{row['Color2']}"></span>
+                        <span class="color-dot" style="background-color: {row['Color3']};" title="{row['Color3']}"></span>
+                    </div>
                 </div>
             </div>
         </div>
         """
         
-        # Render the custom card using Streamlit Components
-        st.components.v1.html(card_html, height=340, scrolling=False)
+        # Height is bumped up to 570px to elegantly fit text and images together without scrolling
+        st.components.v1.html(card_html, height=570, scrolling=False)
 
 # ==============================================================================
 # 5. DATA VISUALIZATION SECTION
