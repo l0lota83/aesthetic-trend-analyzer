@@ -491,3 +491,51 @@ with palette_cols[1]:
     )
     
     st.plotly_chart(fig_tree, use_container_width=True)
+
+   # ==============================================================================
+# 8. PIE CHART VISUALIZATION (Market Share of Voice)
+# ==============================================================================
+st.write("---")
+st.subheader("Market Share of Voice & Macro Segmentation")
+st.markdown("<p style='font-style: italic; color: #666; font-size: 0.95rem; margin-top: -10px; margin-bottom: 20px;'>A structural breakdown of subcultural dominance filtered by seasonal or longevity lifecycles.</p>", unsafe_allow_html=True)
+
+# Interactive data stream selector
+filter_choice = st.selectbox(
+    "Analyze Market Segmentation By:",
+    ["Aesthetic Longevity Lifecycle", "Seasonal Dominance Pattern"]
+)
+
+# Splitting layout into 2 columns: left for chart, right for context insights
+pie_cols = st.columns([2, 1])
+
+with pie_cols[0]:
+    if filter_choice == "Aesthetic Longevity Lifecycle":
+        # Grouping dataset rows by the longevity asset metric
+        df_pie = df.groupby("LongevityPredictor").size().reset_index(name="Count")
+        fig_pie = px.pie(
+            df_pie, 
+            values="Count", 
+            names="LongevityPredictor", 
+            hole=0.6, # Transforms a standard pie into an editorial donut chart
+            color_discrete_sequence=["#D4AF37", "#1A1A1A", "#8ACE00", "#8A8A8A"]
+        )
+    else:
+        # Grouping dataset rows by seasonal dominance trends
+        df_pie = df.groupby("Season").size().reset_index(name="Count")
+        fig_pie = px.pie(
+            df_pie, 
+            values="Count", 
+            names="Season", 
+            hole=0.6,
+            color_discrete_sequence=["#8A8A8A", "#FFC0CB", "#3A3B3C", "#556B2F"]
+        )
+
+    # Styling the donut plot frame to match the premium minimalist UI
+    fig_pie.update_layout(
+        margin=dict(l=10, r=10, t=10, b=10),
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        font_family="Inter",
+        font_color="#1A1A1A",
+        legend=dict(
+            orientation="v",
