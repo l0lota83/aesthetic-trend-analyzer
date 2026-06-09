@@ -237,7 +237,7 @@ for index, row in df.iterrows():
 st.subheader("Trend Velocity & Analytics")
 st.markdown("<p style='font-style: italic; color: #666; font-size: 0.95rem; margin-top: -10px; margin-bottom: 20px;'>Comparative search volume and social media engagement trajectory (Jan - Jun).</p>", unsafe_allow_html=True)
 
-# 1. Formatting analytical data for all 9 aesthetics
+# 1. Analytical dataset for all 9 aesthetics
 analytics_data = {
     "Timeline": ["Jan", "Feb", "Mar", "Apr", "May", "Jun"] * 9,
     "Aesthetic": (
@@ -246,45 +246,68 @@ analytics_data = {
         ["Clean Girl"] * 6 + ["Balletcore"] * 6 + ["Old Money"] * 6
     ),
     "Velocity Index": [
-        # Acubi (Stable, steady Korean streetwear)
-        55, 58, 60, 62, 65, 64,
-        # Coquette (High stable baseline)
-        82, 85, 80, 88, 85, 83,
-        # Office Siren (Currently peaking)
-        70, 78, 85, 92, 98, 95,
-        # Brat (Explosive summer club culture hype)
-        30, 35, 42, 60, 95, 120,
-        # Eclectic Grandpa (Steady rising vintage trend)
-        40, 48, 55, 68, 74, 80,
-        # Y2K (Gentle decline, shifting into staple wardrobe)
-        75, 72, 68, 65, 60, 58,
-        # Clean Girl (Slight decline, evolving into new forms)
-        90, 88, 82, 79, 75, 72,
-        # Balletcore (Soft seasonal shifts in Spring)
-        60, 68, 75, 78, 72, 68,
-        # Old Money (Absolute timeless, permanent classic)
-        70, 71, 70, 72, 70, 71
+        55, 58, 60, 62, 65, 64,  # Acubi
+        82, 85, 80, 88, 85, 83,  # Coquette
+        70, 78, 85, 92, 98, 95,  # Office Siren
+        30, 35, 42, 60, 95, 120, # Brat
+        40, 48, 55, 68, 74, 80,  # Eclectic Grandpa
+        75, 72, 68, 65, 60, 58,  # Y2K
+        90, 88, 82, 79, 75, 72,  # Clean Girl
+        60, 68, 75, 78, 72, 68,  # Balletcore
+        70, 71, 70, 72, 70, 71   # Old Money
     ]
 }
 
 df_analytics = pd.DataFrame(analytics_data)
 
-# 2. Building an interactive multi-line Plotly chart
+# 2. Render dynamic line graph
 fig = px.line(
     df_analytics, 
     x="Timeline", 
     y="Velocity Index", 
     color="Aesthetic",
-    markers=True, # Adds clean data points on the line vertices
+    markers=True,
     color_discrete_sequence=[
         "#8A8A8A", "#FFC0CB", "#3A3B3C", "#8ACE00", "#556B2F", 
         "#FF69B4", "#F5F5DC", "#E6CFE6", "#D4AF37"
-    ] # Line colors strictly match the main signature hex codes from the cards!
+    ]
 )
 
-# 3. Editorial Minimalist Chart Styling Engine
+# 3. Clean editorial layout styling
 fig.update_layout(
-    plot_bgcolor="rgba(0,0,0,0)",   # Transparent chart canvas backplate
-    paper_bgcolor="rgba(0,0,0,0)",  # Transparent outer layout background
+    plot_bgcolor="rgba(0,0,0,0)",
+    paper_bgcolor="rgba(0,0,0,0)",
     font_family="Inter",
-    font_color="#1A1
+    font_color="#1A1A1A",
+    hovermode="x unified",
+    margin=dict(l=10, r=10, t=20, b=10),
+    legend=dict(
+        title_text="Aesthetics",
+        orientation="h",
+        yanchor="bottom",
+        y=-0.3,
+        xanchor="center",
+        x=0.5,
+        font=dict(size=11)
+    ),
+    xaxis=dict(
+        showgrid=False, 
+        linecolor="#EBE9E1", 
+        tickfont=dict(size=11, color="#76746E")
+    ),
+    yaxis=dict(
+        showgrid=True, 
+        gridcolor="#EBE9E1",
+        linecolor="rgba(0,0,0,0)",
+        tickfont=dict(size=11, color="#76746E"),
+        title_text="Trend Velocity Index"
+    )
+)
+
+fig.update_traces(
+    line_width=2.5,
+    marker=dict(size=6),
+    hovertemplate="%{y}"
+)
+
+st.plotly_chart(fig, use_container_width=True)
