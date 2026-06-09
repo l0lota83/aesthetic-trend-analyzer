@@ -648,3 +648,41 @@ if trigger_recommendation:
     </div>
     """
     st.components.v1.html(editorial_spread_html, height=500, scrolling=False)
+
+    # ==============================================================================
+# 9. INTERACTIVE TREND RADAR & GLOSSARY (Deep Cultural Codes)
+# ==============================================================================
+st.write("---")
+st.subheader("Subcultural Radar & Cultural Deep-Dive")
+st.markdown("<p style='font-style: italic; color: #666; font-size: 0.95rem; margin-top: -10px; margin-bottom: 24px;'>Deconstructing the internet folklore, algorithms, and micro-movements behind this season's lexicon.</p>", unsafe_allow_html=True)
+
+# Оборачиваем глоссарий в аккуратные интерактивные раскрывающиеся спойлеры
+with st.expander("✨ What exactly is 'Acubi' and where did it come from?"):
+    st.markdown("""
+    **The Subcultural Root:** Originating from South Korean indie labels (specifically curated by the Acubi Club brand), this aesthetic strips away the chaotic colors of traditional Western alternative fashion. It is the architectural blueprint of modern Seoul minimalist youth culture—substituting heavy cyber-punk layers with sheer textiles, desaturated grays, and tactical cargo structures.
+    """)
+
+with st.expander("🎀 The 'Coquette' vs. 'Balletcore' Nuance Explained"):
+    st.markdown("""
+    **The Core Shift:** While both movements hyper-fixate on hyper-femininity, they pull from entirely different worlds:
+    * **Coquette** is literary and historical. It relies on Nabokovian nostalgia, Marie Antoinette romance, Lana Del Rey vinyl aesthetics, pearls, and heavy silk ribbons.
+    * **Balletcore** is utilitarian performance wear. It is inspired by a🩰 dancer's off-duty rehearsal gear—leg warmers, wrap-around cardigans, spandex, tulle, and flat footwear meant for physical motion.
+    """)
+
+with st.expander("🟩 Why the 'Brat' Lime Green Hue Became a Cultural Weapon"):
+    st.markdown("""
+    **The Algorithm Hack:** Dubbed 'Brat Green' (#8ACE00), this specific neon shade was engineered to be intentionally offensive to standard luxury minimalism ('Clean Girl' beige). It represents anti-perfectionism, rave culture, and raw authenticity. It breaks grid aesthetics on Instagram and TikTok, instantly catching the human eye by mimicking low-fi digital trash assets.
+    """)
+
+with st.expander("👓 'Office Siren' and the Return of Vintage Geek-Chic"):
+    st.markdown("""
+    **The Corporate Subversion:** This trend is a nostalgic celebration of late 1990s and early 2000s runway shows from Tom Ford's Gucci and Miu Miu. It transforms boring corporate dress codes into sharp, intellectual weaponized fashion. The core defining anchor is the immediate integration of **Bayonetta glasses** (thin, horizontal acetate frames).
+    """)
+
+# Финальный красивый футер приложения
+st.markdown("<br><br>", unsafe_allow_html=True)
+st.markdown("""
+<div style="text-align: center; padding: 20px; border-top: 1px solid #EBE9E1; font-size: 0.8rem; color: #76746E; font-family: 'Inter', sans-serif; letter-spacing: 0.05em;">
+    © 2026 AESTHETIC INTELLIGENCE CORE • ALL RIGHTS RESERVED • EDITORIAL DATA v1.4
+</div>
+""", unsafe_allow_html=True)
