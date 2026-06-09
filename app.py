@@ -311,3 +311,63 @@ fig.update_traces(
 )
 
 st.plotly_chart(fig, use_container_width=True)
+
+# ==============================================================================
+# 6. TREND SCORE ANALYSIS SECTION
+# ==============================================================================
+st.write("---")
+st.subheader("Trend Score Analysis & Nomenclature")
+
+# Create a two-column layout for the metrics and definition guide
+analysis_cols = st.columns([1, 2])
+
+with analysis_cols[0]:
+    st.markdown("""
+    <div style="background-color: #FFFFFF; border: 1px solid #EBE9E1; border-radius: 12px; padding: 20px; height: 100%;">
+        <h4 style="font-family: 'Playfair Display', serif; font-size: 1.2rem; margin-top: 0;">Methodology</h4>
+        <p style="font-size: 0.88rem; color: #4A4A4A; line-height: 1.5; margin-bottom: 0;">
+            Our <strong>Trend Velocity Index</strong> weights global search volume variations, TikTok/Instagram audio reuse rates, and retail stock introduction speeds to rank current cultural shifts.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+with analysis_cols[1]:
+    st.markdown("""
+    <div style="background-color: #FFFFFF; border: 1px solid #EBE9E1; border-radius: 12px; padding: 20px; height: 100%;">
+        <h4 style="font-family: 'Playfair Display', serif; font-size: 1.2rem; margin-top: 0;">Nomenclature Breakdown</h4>
+        <ul style="font-size: 0.88rem; color: #4A4A4A; padding-left: 20px; margin-bottom: 0; line-height: 1.6;">
+            <li><strong>Permanent Classic (Score 70-75):</strong> Immune to seasonal algorithms. High investment value.</li>
+            <li><strong>Stable Core (Score 60-85):</strong> Long-term cultural relevance with a deeply loyal subculture base.</li>
+            <li><strong>Peak / Rising Trend (Score 80-95):</strong> High commercial conversion rate right now. Mainstream adoption phase.</li>
+            <li><strong>High-Impact Flash (Score 95+):</strong> Viral hyper-acceleration. Extreme cultural capital but fast decay risk.</li>
+        </ul>
+    </div>
+    """, unsafe_allow_html=True)
+
+# Add a clean data table layout below the cards
+st.markdown("<br>", unsafe_allow_html=True)
+
+# Generate a sorted breakdown ranking the highest velocity trends for June
+df_ranked = df_analytics[df_analytics["Timeline"] == "Jun"].sort_values(by="Velocity Index", ascending=False)
+
+# Render a styled headers row for our leaderboard
+st.markdown("""
+<div style="display: flex; justify-content: space-between; padding: 10px 16px; background-color: #EBE9E1; border-radius: 6px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #1A1A1A;">
+    <span>Rank & Aesthetic Movement</span>
+    <span>June Velocity Score</span>
+</div>
+""", unsafe_allow_html=True)
+
+# Loop through data to generate individual sleek list rows
+for rank, (_, row) in enumerate(df_ranked.iterrows(), start=1):
+    st.markdown(f"""
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-bottom: 1px solid #EBE9E1; font-size: 0.9rem; color: #1A1A1A;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="font-family: monospace; font-size: 0.8rem; color: #76746E;">#{rank:02d}</span>
+            <strong style="font-family: 'Inter', sans-serif; font-weight: 500;">{row['Aesthetic']}</strong>
+        </div>
+        <span style="font-family: monospace; font-weight: 600; color: {'#8ACE00' if row['Velocity Index'] > 95 else '#1A1A1A'};">
+            {row['Velocity Index']} pts
+        </span>
+    </div>
+    """, unsafe_allow_html=True)
