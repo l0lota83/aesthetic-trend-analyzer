@@ -468,7 +468,6 @@ st.write("---")
 st.subheader("Interactive Style Concierge")
 st.markdown("<p style='font-style: italic; color: #666; font-size: 0.95rem; margin-top: -10px; margin-bottom: 24px;'>Discover your subcultural match through predictive moodboard alignment.</p>", unsafe_allow_html=True)
 
-# Создаем красивую чистую карточку-панель для ввода параметров
 st.markdown("""
 <div style="background-color: #FFFFFF; border: 1px solid #EBE9E1; border-radius: 12px; padding: 24px; margin-bottom: 24px;">
     <span style="font-size: 0.75rem; text-transform: uppercase; color: #76746E; letter-spacing: 0.08em;">Engine V1.0</span>
@@ -476,7 +475,6 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Верстаем селекторы параметров в 3 аккуратные колонки
 rec_inputs = st.columns(3)
 
 with rec_inputs[0]:
@@ -485,21 +483,4 @@ with rec_inputs[0]:
         ["Minimal & Sharp", "Romantic & Nostalgic", "Rebellious & Raw", "Cozy & Heritage"]
     )
 
-with rec_inputs[1]:
-    color_profile = st.selectbox(
-        "Select Your Visual Palette:",
-        ["Monochrome & Neutrals", "Pastels & Soft Whites", "Vibrant & High-Contrast", "Earth Tones & Muted Greens"]
-    )
-
-with rec_inputs[2]:
-    wardrobe_staple = st.selectbox(
-        "Select Your Key Wardrobe Piece:",
-        ["Tailored Blazers / Eyewear", "Ribbons / Lace / Corsets", "Cargo Skirts / Asymmetry", "Oversized Knits / Corduroy"]
-    )
-
-# Кнопка запуска подбора (Стилизована под минималистичный люкс)
-st.markdown("<br>", unsafe_allow_html=True)
-trigger_recommendation = st.button("Generate Style Alignment Report", use_container_width=True)
-
-if trigger_recommendation:
-    # Логика ма
+with rec_inputs
