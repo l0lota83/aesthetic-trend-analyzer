@@ -372,7 +372,7 @@ for rank, (_, row) in enumerate(df_ranked.iterrows(), start=1):
     </div>
     """, unsafe_allow_html=True)
 
-   # ==============================================================================
+  # ==============================================================================
 # 7. INTERACTIVE COLOR PALETTE VISUALIZATION
 # ==============================================================================
 st.write("---")
@@ -389,7 +389,8 @@ df_colors = pd.DataFrame(color_records)
 palette_cols = st.columns([2, 1])
 
 with palette_cols[0]:
-    mosaic_html = """
+    # Inject pure CSS separately to prevent f-string bracket compilation errors
+    st.markdown("""
     <style>
         .spectrum-grid {
             display: grid;
@@ -428,4 +429,15 @@ with palette_cols[0]:
             font-family: 'Inter', sans-serif; font-size: 0.65rem;
             text-transform: uppercase; letter-spacing: 0.02em; color: #76746E; margin-bottom: 3px;
             background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(4px);
-            padding: 1px 4px; border-radius: 3px; overflow: hidden; text-overflow: ellipsis; white-
+            padding: 1px 4px; border-radius: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+    </style>
+    """, unsafe_allow_html=True)
+
+    # Build layout using clean concatenation loops instead of triple quotes
+    html_elements = ["<div class='spectrum-grid'>"]
+    for _, c in df_colors.iterrows():
+        item_html = (
+            f"<div class='spectrum-brick' style='background-color: {c['Hex']};' "
+            f"onclick=\"navigator.clipboard.writeText('{c['Hex']}'); alert('Copied {c['Hex']} to clipboard!');\">"
+            f"<div class='brick-title'>{c['Aesthetic']}</div>"
