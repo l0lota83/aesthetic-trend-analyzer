@@ -371,3 +371,123 @@ for rank, (_, row) in enumerate(df_ranked.iterrows(), start=1):
         </span>
     </div>
     """, unsafe_allow_html=True)
+
+    # ==============================================================================
+# 7. INTERACTIVE COLOR PALETTE VISUALIZATION
+# ==============================================================================
+st.write("---")
+st.subheader("Global Color Spectrum & Palette Explorer")
+st.markdown("<p style='font-style: italic; color: #666; font-size: 0.95rem; margin-top: -10px; margin-bottom: 24px;'>A high-density visual index mapping the exact hex coordinates driving this season's subcultures.</p>", unsafe_allow_html=True)
+
+# Собираем данные обо всех цветах из нашего основного датафрейма df
+color_records = []
+for _, row in df.iterrows():
+    color_records.append({"Aesthetic": row["Aesthetic"], "Hex": row["Color1"], "Label": "Primary"})
+    color_records.append({"Aesthetic": row["Aesthetic"], "Hex": row["Color2"], "Label": "Secondary"})
+    color_records.append({"Aesthetic": row["Aesthetic"], "Hex": row["Color3"], "Label": "Accent"})
+
+df_colors = pd.DataFrame(color_records)
+
+# Сетка-лаборатория: делим экран на левую интерактивную витрину и правый аналитический блок
+palette_cols = st.columns([2, 1])
+
+with palette_cols[0]:
+    # Генерируем сплошную мозаичную CSS-панель (Color Grid Macro View)
+    mosaic_html = """
+    <style>
+        .spectrum-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 8px;
+            background: #FFFFFF;
+            border: 1px solid #EBE9E1;
+            border-radius: 12px;
+            padding: 16px;
+        }
+        .spectrum-brick {
+            height: 85px;
+            border-radius: 6px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.23s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .spectrum-brick:hover {
+            transform: scale(1.04);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            z-index: 2;
+        }
+        .brick-meta {
+            font-family: monospace;
+            font-size: 0.72rem;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(4px);
+            padding: 2px 4px;
+            border-radius: 3px;
+            color: #1A1A1A;
+            text-align: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .brick-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            color: #76746E;
+            margin-bottom: 3px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(4px);
+            padding: 1px 4px;
+            border-radius: 3px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    </style>
+    <div class="spectrum-grid">
+    """
+    
+    # Заполняем мозаику всеми цветами проекта динамически
+    for _, c in df_colors.iterrows():
+        mosaic_html += f"""
+        <div class="spectrum-brick" style="background-color: {c['Hex']};" onclick="navigator.clipboard.writeText('{c['Hex']}'); alert('Copied {c['Hex']} to clipboard!');">
+            <div class="brick-title">{c['Aesthetic']}</div>
+            <div class="brick-meta">{c['Hex']}</div>
+        </div>
+        """
+    mosaic_html += "</div>"
+    
+    # Отображаем нашу арт-панель
+    st.components.v1.html(mosaic_html, height=310, scrolling=True)
+
+with palette_cols[1]:
+    # Справа делаем распределение по тональностям (Color Weight Chart) через Plotly Treemap
+    # Это показывает, какие оттенки доминируют в текущей культуре сильнее всего
+    fig_tree = px.treemap(
+        df_colors, 
+        path=["Label", "Aesthetic"], 
+        values=[1]*len(df_colors),
+        color="Hex",
+        color_discrete_map={hex_val: hex_val for hex_val in df_colors["Hex"]}
+    )
+    
+    fig_tree.update_layout(
+        margin=dict(l=0, r=0, t=0, b=0),
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        font_family="Inter"
+    )
+    fig_tree.update_traces(
+        textinfo="label",
+        hovertemplate="<b>%{label}</b><br>Hex: %{color}"
+    )
+    
+    st.plotly_chart(fig_tree, use_container_width=True)
