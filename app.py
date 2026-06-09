@@ -100,21 +100,21 @@ st.subheader("Current Aesthetics Overview")
 
 import base64
 
-# Функция для безопасной конвертации локальной картинки в понятный для HTML формат
+# Функция для безопасной конвертации локальной картинки в формат Base64
 def get_base64_image(image_path):
     try:
         with open(image_path, "rb") as img_file:
             return "data:image/jpeg;base64," + base64.b64encode(img_file.read()).decode()
     except Exception:
-        # Если файл не найден на сервере, возвращаем прозрачную заглушку, чтобы код не падал
+        # Если файл по какой-то причине не найден, отдаем пустую стильную заглушку цвета карточки
         return "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
 
-# Строим сетку из 3 колонок
+# Строим адаптивную сетку в 3 колонки
 cols = st.columns(3)
 
 for index, row in df.iterrows():
     with cols[index % 3]:
-        # Кодируем каждую из 3-х картинок в Base64 формат
+        # Безопасно кодируем все три кадра lookbook-коллажа
         img1_base64 = get_base64_image(row['Image1'])
         img2_base64 = get_base64_image(row['Image2'])
         img3_base64 = get_base64_image(row['Image3'])
@@ -148,6 +148,7 @@ for index, row in df.iterrows():
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
+                background: #EBE9E1; /* Элегантный фон, пока картинка грузится */
             }}
             
             .img-main {{
