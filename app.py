@@ -232,45 +232,59 @@ for index, row in df.iterrows():
         st.components.v1.html(card_html, height=570, scrolling=False)
 
 # ==============================================================================
-# 5. DATA VISUALIZATION SECTION
+# 5. DATA VISUALIZATION SECTION (Aesthetic Trend Analytics)
 # ==============================================================================
-st.subheader("Trend Analytics")
+st.subheader("Trend Velocity & Analytics")
+st.markdown("<p style='font-style: italic; color: #666; font-size: 0.95rem; margin-top: -10px; margin-bottom: 20px;'>Comparative search volume and social media engagement trajectory (Jan - Jun).</p>", unsafe_allow_html=True)
 
-# Sample trend over time dataframe
-trend_data = pd.DataFrame({
-    "Timeline": ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-    "Velocity": [35, 48, 72, 68, 94, 120]
-})
-
-fig = px.line(trend_data, x="Timeline", y="Velocity", title="Trend Velocity Analysis")
-
-# Modernist Plotly Styling Architecture
-fig.update_layout(
-    plot_bgcolor="rgba(0,0,0,0)",   # Transparent workspace background
-    paper_bgcolor="rgba(0,0,0,0)",  # Transparent overall paper wrapper
-    font_family="Inter",
-    font_color="#1A1A1A",
-    title_font_family="Playfair Display",
-    title_font_size=22,
-    margin=dict(l=10, r=10, t=50, b=10),
-    xaxis=dict(
-        showgrid=False, 
-        linecolor="#EBE9E1", 
-        tickfont=dict(size=11, color="#76746E")
+# 1. Formatting analytical data for all 9 aesthetics
+analytics_data = {
+    "Timeline": ["Jan", "Feb", "Mar", "Apr", "May", "Jun"] * 9,
+    "Aesthetic": (
+        ["Acubi"] * 6 + ["Coquette"] * 6 + ["Office Siren"] * 6 + 
+        ["Brat"] * 6 + ["Eclectic Grandpa"] * 6 + ["Y2K"] * 6 + 
+        ["Clean Girl"] * 6 + ["Balletcore"] * 6 + ["Old Money"] * 6
     ),
-    yaxis=dict(
-        showgrid=True, 
-        gridcolor="#EBE9E1", 
-        linecolor="rgba(0,0,0,0)",
-        tickfont=dict(size=11, color="#76746E")
-    )
+    "Velocity Index": [
+        # Acubi (Stable, steady Korean streetwear)
+        55, 58, 60, 62, 65, 64,
+        # Coquette (High stable baseline)
+        82, 85, 80, 88, 85, 83,
+        # Office Siren (Currently peaking)
+        70, 78, 85, 92, 98, 95,
+        # Brat (Explosive summer club culture hype)
+        30, 35, 42, 60, 95, 120,
+        # Eclectic Grandpa (Steady rising vintage trend)
+        40, 48, 55, 68, 74, 80,
+        # Y2K (Gentle decline, shifting into staple wardrobe)
+        75, 72, 68, 65, 60, 58,
+        # Clean Girl (Slight decline, evolving into new forms)
+        90, 88, 82, 79, 75, 72,
+        # Balletcore (Soft seasonal shifts in Spring)
+        60, 68, 75, 78, 72, 68,
+        # Old Money (Absolute timeless, permanent classic)
+        70, 71, 70, 72, 70, 71
+    ]
+}
+
+df_analytics = pd.DataFrame(analytics_data)
+
+# 2. Building an interactive multi-line Plotly chart
+fig = px.line(
+    df_analytics, 
+    x="Timeline", 
+    y="Velocity Index", 
+    color="Aesthetic",
+    markers=True, # Adds clean data points on the line vertices
+    color_discrete_sequence=[
+        "#8A8A8A", "#FFC0CB", "#3A3B3C", "#8ACE00", "#556B2F", 
+        "#FF69B4", "#F5F5DC", "#E6CFE6", "#D4AF37"
+    ] # Line colors strictly match the main signature hex codes from the cards!
 )
 
-# Render the path line as an ultra-crisp charcoal line
-fig.update_traces(
-    line_color="#1A1A1A", 
-    line_width=2,
-    hovertemplate="Velocity: %{y}<extra></extra>"
-)
-
-st.plotly_chart(fig, use_container_width=True)
+# 3. Editorial Minimalist Chart Styling Engine
+fig.update_layout(
+    plot_bgcolor="rgba(0,0,0,0)",   # Transparent chart canvas backplate
+    paper_bgcolor="rgba(0,0,0,0)",  # Transparent outer layout background
+    font_family="Inter",
+    font_color="#1A1
