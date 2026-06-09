@@ -94,16 +94,31 @@ st.write("---")
 
 
 # ==============================================================================
-# 4. MOODBOARD GRID SYSTEM (With 3-Image Pinterest Collage)
+# 4. MOODBOARD GRID SYSTEM (Safe Base64 Local Image Core)
 # ==============================================================================
 st.subheader("Current Aesthetics Overview")
 
-# Build a responsive 3-column layout grid
+import base64
+
+# Функция для безопасной конвертации локальной картинки в понятный для HTML формат
+def get_base64_image(image_path):
+    try:
+        with open(image_path, "rb") as img_file:
+            return "data:image/jpeg;base64," + base64.b64encode(img_file.read()).decode()
+    except Exception:
+        # Если файл не найден на сервере, возвращаем прозрачную заглушку, чтобы код не падал
+        return "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+
+# Строим сетку из 3 колонок
 cols = st.columns(3)
 
 for index, row in df.iterrows():
     with cols[index % 3]:
-        # Injecting the collage template into each card block
+        # Кодируем каждую из 3-х картинок в Base64 формат
+        img1_base64 = get_base64_image(row['Image1'])
+        img2_base64 = get_base64_image(row['Image2'])
+        img3_base64 = get_base64_image(row['Image3'])
+        
         card_html = f"""
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600&display=swap');
@@ -112,19 +127,18 @@ for index, row in df.iterrows():
                 background: #FFFFFF;
                 border: 1px solid #EBE9E1;
                 border-radius: 12px;
-                overflow: hidden; /* Clips image corners to match card border */
+                overflow: hidden;
                 font-family: 'Inter', sans-serif;
                 color: #1A1A1A;
                 box-shadow: 0 4px 20px rgba(26, 26, 26, 0.02);
                 margin-bottom: 24px;
             }}
             
-            /* Pinterest-Style Layout Engine */
             .moodboard-collage {{
                 display: grid;
                 grid-template-columns: 1.8fr 1fr;
                 grid-template-rows: 105px 105px;
-                gap: 4px; /* Crisp gap line between images */
+                gap: 4px;
                 background: #EBE9E1;
                 height: 214px;
                 width: 100%;
@@ -133,11 +147,11 @@ for index, row in df.iterrows():
             .collage-img {{
                 width: 100%;
                 height: 100%;
-                object-fit: cover; /* Keeps fashion assets from stretching */
+                object-fit: cover;
             }}
             
             .img-main {{
-                grid-row: span 2; /* Forces first image to stretch top-to-bottom */
+                grid-row: span 2;
             }}
             
             .card-content {{
@@ -175,9 +189,9 @@ for index, row in df.iterrows():
         
         <div class="aesthetic-card">
             <div class="moodboard-collage">
-                <img class="collage-img img-main" src="{row['Image1']}" alt="Main Frame">
-                <img class="collage-img" src="{row['Image2']}" alt="Detail Frame A">
-                <img class="collage-img" src="{row['Image3']}" alt="Detail Frame B">
+                <img class="collage-img img-main" src="{img1_base64}">
+                <img class="collage-img" src="{img2_base64}">
+                <img class="collage-img" src="{img3_base64}">
             </div>
             
             <div class="card-content">
@@ -214,7 +228,6 @@ for index, row in df.iterrows():
         </div>
         """
         
-        # Height is bumped up to 570px to elegantly fit text and images together without scrolling
         st.components.v1.html(card_html, height=570, scrolling=False)
 
 # ==============================================================================
