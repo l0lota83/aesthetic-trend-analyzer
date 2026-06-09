@@ -1,7 +1,10 @@
-Aesthetic,Popularity,TrendScore,Season,Color
-Acubi,85,90,All,#8A8A8A
-Coquette,78,82,Spring,#FFC0CB
-Y2K,92,95,Summer,#FF69B4
-Clean Girl,88,89,All,#F5F5DC
-Balletcore,74,80,Spring,#E6CFE6
-Old Money,81,84,Fall,#D4AF37
+Aesthetic,VibeCheck,CoreElements,KeyBrands,LongevityPredictor,Season,Color
+Acubi,Minimalist streetwear meets subcultural grunge. Neutral tones with asymmetric cuts.,Asymmetric knits; Cargo skirts; Sheer layers; Silver jewelry,Thug Club; Andersson Bell; Musee d'Art,Stable Core,All,#8A8A8A
+Coquette,Hyper-feminine vintage romance with a nostalgic doll-like charm.,Ribbon bows; Lace corsets; Pearl chokers; Knee-high socks,Sandy Liang; Shushu/Tong; Simone Rocha,Stable Core,Spring,#FFC0CB
+Y2K,Late 90s and early 2000s tech-optimism mixed with flashy futuristic clubwear.,Low-rise jeans; Metallic fabrics; Shield sunglasses; Baby tees,Diesel; Blumarine; Juicy Couture,Classic Nostalgia,Summer,#FF69B4
+Clean Girl,Effortless low-maintenance luxury and slicked-back wellness lifestyle.,Gold hoops; Linen trousers; Slicked-back buns; Neutral matching sets,The Row; Alo Yoga; Sporty & Rich,Micro-trend (Evolving),All,#F5F5DC
+Balletcore,Graceful off-duty ballerina rehearsals mixed with cozy loungewear.,Leg warmers; Tulle skirts; Wrap cardigans; Satin ballet flats,Repetto; Miu Miu; Orseund Iris,Stable Core,Spring,#E6CFE6
+Old Money,Quiet luxury and understated aristocratic elegance focused on heritage tailoring.,Cashmere sweaters; Tailored blazers; Tennis skirts; Leather loafers,Loro Piana; Ralph Lauren; Brunello Cucinelli,Permanent Classic,Fall,#D4AF37
+Office Siren,90s corporate chic with a sharp intellectual and subtly provocative edge.,Bayonetta glasses; Pencil skirts; Pointed slingbacks; Fitted pinstripe blazers,Miu Miu (90s Archive); Tom Ford-era Gucci; Calvin Klein,Peak Trend,Winter,#3A3B3C
+Brat,Messy rebellious party-girl energy with a raw anti-perfectionist club culture vibe.,Neon lime green; Smudged eyeliner; Distressed leather; Low-fidelity graphics,Charli XCX Merch; Acne Studios; Mowalola,High-Impact Flash Trend,Summer,#8ACE00
+Eclectic Grandpa,Cozy retro maximalism and layered styling inspired by vintage menswear.,Oversized knit vests; Corduroy trousers; Retro sneakers; Colorful loafers,Bode; Tyler the Creator (Golf le Fleur); Gucci,Rising Trend,Autumn,#556B2F
