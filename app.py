@@ -372,14 +372,13 @@ for rank, (_, row) in enumerate(df_ranked.iterrows(), start=1):
     </div>
     """, unsafe_allow_html=True)
 
-    # ==============================================================================
+   # ==============================================================================
 # 7. INTERACTIVE COLOR PALETTE VISUALIZATION
 # ==============================================================================
 st.write("---")
 st.subheader("Global Color Spectrum & Palette Explorer")
 st.markdown("<p style='font-style: italic; color: #666; font-size: 0.95rem; margin-top: -10px; margin-bottom: 24px;'>A high-density visual index mapping the exact hex coordinates driving this season's subcultures.</p>", unsafe_allow_html=True)
 
-# Собираем данные обо всех цветах из нашего основного датафрейма df
 color_records = []
 for _, row in df.iterrows():
     color_records.append({"Aesthetic": row["Aesthetic"], "Hex": row["Color1"], "Label": "Primary"})
@@ -387,12 +386,9 @@ for _, row in df.iterrows():
     color_records.append({"Aesthetic": row["Aesthetic"], "Hex": row["Color3"], "Label": "Accent"})
 
 df_colors = pd.DataFrame(color_records)
-
-# Сетка-лаборатория: делим экран на левую интерактивную витрину и правый аналитический блок
 palette_cols = st.columns([2, 1])
 
 with palette_cols[0]:
-    # Генерируем сплошную мозаичную CSS-панель (Color Grid Macro View)
     mosaic_html = """
     <style>
         .spectrum-grid {
@@ -423,119 +419,13 @@ with palette_cols[0]:
             z-index: 2;
         }
         .brick-meta {
-            font-family: monospace;
-            font-size: 0.72rem;
-            font-weight: 600;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(4px);
-            padding: 2px 4px;
-            border-radius: 3px;
-            color: #1A1A1A;
-            text-align: center;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+            font-family: monospace; font-size: 0.72rem; font-weight: 600;
+            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(4px);
+            padding: 2px 4px; border-radius: 3px; color: #1A1A1A;
+            text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
         }
         .brick-title {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.65rem;
-            text-transform: uppercase;
-            letter-spacing: 0.02em;
-            color: #76746E;
-            margin-bottom: 3px;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(4px);
-            padding: 1px 4px;
-            border-radius: 3px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-    </style>
-    <div class="spectrum-grid">
-    """
-    
-    # Заполняем мозаику всеми цветами проекта динамически
-    for _, c in df_colors.iterrows():
-        mosaic_html += f"""
-        <div class="spectrum-brick" style="background-color: {c['Hex']};" onclick="navigator.clipboard.writeText('{c['Hex']}'); alert('Copied {c['Hex']} to clipboard!');">
-            <div class="brick-title">{c['Aesthetic']}</div>
-            <div class="brick-meta">{c['Hex']}</div>
-        </div>
-        """
-    mosaic_html += "</div>"
-    
-    # Отображаем нашу арт-панель
-    st.components.v1.html(mosaic_html, height=310, scrolling=True)
-
-with palette_cols[1]:
-    # Справа делаем распределение по тональностям (Color Weight Chart) через Plotly Treemap
-    # Это показывает, какие оттенки доминируют в текущей культуре сильнее всего
-    fig_tree = px.treemap(
-        df_colors, 
-        path=["Label", "Aesthetic"], 
-        values=[1]*len(df_colors),
-        color="Hex",
-        color_discrete_map={hex_val: hex_val for hex_val in df_colors["Hex"]}
-    )
-    
-    fig_tree.update_layout(
-        margin=dict(l=0, r=0, t=0, b=0),
-        paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(0,0,0,0)",
-        font_family="Inter"
-    )
-    fig_tree.update_traces(
-        textinfo="label",
-        hovertemplate="<b>%{label}</b><br>Hex: %{color}"
-    )
-    
-    st.plotly_chart(fig_tree, use_container_width=True)
-
-   # ==============================================================================
-# 8. PIE CHART VISUALIZATION (Market Share of Voice)
-# ==============================================================================
-st.write("---")
-st.subheader("Market Share of Voice & Macro Segmentation")
-st.markdown("<p style='font-style: italic; color: #666; font-size: 0.95rem; margin-top: -10px; margin-bottom: 20px;'>A structural breakdown of subcultural dominance filtered by seasonal or longevity lifecycles.</p>", unsafe_allow_html=True)
-
-# Interactive data stream selector
-filter_choice = st.selectbox(
-    "Analyze Market Segmentation By:",
-    ["Aesthetic Longevity Lifecycle", "Seasonal Dominance Pattern"]
-)
-
-# Splitting layout into 2 columns: left for chart, right for context insights
-pie_cols = st.columns([2, 1])
-
-with pie_cols[0]:
-    if filter_choice == "Aesthetic Longevity Lifecycle":
-        # Grouping dataset rows by the longevity asset metric
-        df_pie = df.groupby("LongevityPredictor").size().reset_index(name="Count")
-        fig_pie = px.pie(
-            df_pie, 
-            values="Count", 
-            names="LongevityPredictor", 
-            hole=0.6, # Transforms a standard pie into an editorial donut chart
-            color_discrete_sequence=["#D4AF37", "#1A1A1A", "#8ACE00", "#8A8A8A"]
-        )
-    else:
-        # Grouping dataset rows by seasonal dominance trends
-        df_pie = df.groupby("Season").size().reset_index(name="Count")
-        fig_pie = px.pie(
-            df_pie, 
-            values="Count", 
-            names="Season", 
-            hole=0.6,
-            color_discrete_sequence=["#8A8A8A", "#FFC0CB", "#3A3B3C", "#556B2F"]
-        )
-
-    # Styling the donut plot frame to match the premium minimalist UI
-    fig_pie.update_layout(
-        margin=dict(l=10, r=10, t=10, b=10),
-        paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(0,0,0,0)",
-        font_family="Inter",
-        font_color="#1A1A1A",
-        legend=dict(
-            orientation="v",
+            font-family: 'Inter', sans-serif; font-size: 0.65rem;
+            text-transform: uppercase; letter-spacing: 0.02em; color: #76746E; margin-bottom: 3px;
+            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(4px);
+            padding: 1px 4px; border-radius: 3px; overflow: hidden; text-overflow: ellipsis; white-
