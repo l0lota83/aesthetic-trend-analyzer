@@ -94,7 +94,7 @@ st.write("---")
 
 
 # ==============================================================================
-# 4. MOODBOARD GRID SYSTEM (Replacing Old Tables)
+# 4. MOODBOARD GRID SYSTEM (Fixed HTML rendering)
 # ==============================================================================
 st.subheader("Current Aesthetics Overview")
 
@@ -103,37 +103,72 @@ cols = st.columns(3)
 
 for index, row in df.iterrows():
     with cols[index % 3]:
-        st.markdown(f"""
-            <div class="aesthetic-card">
-                <div style="display: flex; justify-content: space-between; font-size: 0.75rem; text-transform: uppercase; color: #76746E; letter-spacing: 0.08em; margin-bottom: 12px;">
-                    <span>{row['LongevityPredictor']}</span>
-                    <span>{row['Season']}</span>
-                </div>
-                
-                <h3 style="margin: 0 0 12px 0; font-size: 1.6rem;">{row['Aesthetic']}</h3>
-                
-                <p style="font-size: 0.92rem; color: #4A4A4A; line-height: 1.5; font-style: italic; margin-bottom: 18px;">
-                    "{row['VibeCheck']}"
-                </p>
-                
-                <div style="font-size: 0.85rem; line-height: 1.6; color: #1A1A1A; margin-bottom: 6px;">
-                    <strong style="text-transform: uppercase; font-size: 0.75rem; color: #76746E; letter-spacing: 0.03em;">Essentials:</strong> {row['CoreElements']}
-                </div>
-                <div style="font-size: 0.85rem; line-height: 1.6; color: #1A1A1A; margin-bottom: 18px;">
-                    <strong style="text-transform: uppercase; font-size: 0.75rem; color: #76746E; letter-spacing: 0.03em;">Key Brands:</strong> {row['KeyBrands']}
-                </div>
-                
-                <hr>
-                
-                <div style="display: flex; align-items: center;">
-                    <span class="color-dot" style="background-color: {row['Color']};"></span>
-                    <span style="font-family: monospace; font-size: 0.8rem; color: #76746E; letter-spacing: 0.05em;">{row['Color']}</span>
-                </div>
+        # Pack everything into a single HTML block string
+        card_html = f"""
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600&display=swap');
+            
+            .aesthetic-card {{
+                background: #FFFFFF;
+                border: 1px solid #EBE9E1;
+                border-radius: 8px;
+                padding: 24px;
+                font-family: 'Inter', sans-serif;
+                color: #1A1A1A;
+                box-shadow: 0 4px 20px rgba(26, 26, 26, 0.02);
+            }}
+            h3 {{
+                font-family: 'Playfair Display', serif !important;
+                font-weight: 400 !important;
+                margin: 0 0 12px 0; 
+                font-size: 1.6rem;
+                color: #1A1A1A;
+            }}
+            .color-dot {{
+                height: 16px;
+                width: 16px;
+                border-radius: 50%;
+                display: inline-block;
+                margin-right: 10px;
+                border: 1px solid rgba(0, 0, 0, 0.08);
+            }}
+            hr {{
+                border: 0;
+                border-top: 1px solid #EBE9E1;
+                margin: 20px 0;
+            }}
+        </style>
+        
+        <div class="aesthetic-card">
+            <div style="display: flex; justify-content: space-between; font-size: 0.75rem; text-transform: uppercase; color: #76746E; letter-spacing: 0.08em; margin-bottom: 12px;">
+                <span>{row['LongevityPredictor']}</span>
+                <span>{row['Season']}</span>
             </div>
-        """, unsafe_allow_html=True)
-
-st.write("---")
-
+            
+            <h3>{row['Aesthetic']}</h3>
+            
+            <p style="font-size: 0.92rem; color: #4A4A4A; line-height: 1.5; font-style: italic; margin-bottom: 18px;">
+                "{row['VibeCheck']}"
+            </p>
+            
+            <div style="font-size: 0.85rem; line-height: 1.6; color: #1A1A1A; margin-bottom: 6px;">
+                <strong style="text-transform: uppercase; font-size: 0.75rem; color: #76746E; letter-spacing: 0.03em;">Essentials:</strong> {row['CoreElements']}
+            </div>
+            <div style="font-size: 0.85rem; line-height: 1.6; color: #1A1A1A; margin-bottom: 18px;">
+                <strong style="text-transform: uppercase; font-size: 0.75rem; color: #76746E; letter-spacing: 0.03em;">Key Brands:</strong> {row['KeyBrands']}
+            </div>
+            
+            <hr>
+            
+            <div style="display: flex; align-items: center;">
+                <span class="color-dot" style="background-color: {row['Color']};"></span>
+                <span style="font-family: monospace; font-size: 0.8rem; color: #76746E; letter-spacing: 0.05em;">{row['Color']}</span>
+            </div>
+        </div>
+        """
+        
+        # Use Streamlit's HTML component to render the custom card securely
+        st.components.v1.html(card_html, height=330, scrolling=False)
 
 # ==============================================================================
 # 5. DATA VISUALIZATION SECTION
