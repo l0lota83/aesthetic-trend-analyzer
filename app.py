@@ -389,7 +389,6 @@ df_colors = pd.DataFrame(color_records)
 palette_cols = st.columns([2, 1])
 
 with palette_cols[0]:
-    # Inject pure CSS separately to prevent f-string bracket compilation errors
     st.markdown("""
     <style>
         .spectrum-grid {
@@ -434,10 +433,87 @@ with palette_cols[0]:
     </style>
     """, unsafe_allow_html=True)
 
-    # Build layout using clean concatenation loops instead of triple quotes
     html_elements = ["<div class='spectrum-grid'>"]
     for _, c in df_colors.iterrows():
-        item_html = (
-            f"<div class='spectrum-brick' style='background-color: {c['Hex']};' "
-            f"onclick=\"navigator.clipboard.writeText('{c['Hex']}'); alert('Copied {c['Hex']} to clipboard!');\">"
-            f"<div class='brick-title'>{c['Aesthetic']}</div>"
+        # Flat single line concatenation prevents parenthesis syntax failures
+        item_html = "<div class='spectrum-brick' style='background-color: " + str(c['Hex']) + ";' onclick=\"navigator.clipboard.writeText('" + str(c['Hex']) + "'); alert('Copied " + str(c['Hex']) + " to clipboard!');\"><div class='brick-title'>" + str(c['Aesthetic']) + "</div><div class='brick-meta'>" + str(c['Hex']) + "</div></div>"
+        html_elements.append(item_html)
+    html_elements.append("</div>")
+    
+    mosaic_html = "".join(html_elements)
+    st.components.v1.html(mosaic_html, height=310, scrolling=True)
+
+with palette_cols[1]:
+    fig_tree = px.treemap(
+        df_colors, 
+        path=["Label", "Aesthetic"], 
+        values=[1]*len(df_colors),
+        color="Hex",
+        color_discrete_map={hex_val: hex_val for hex_val in df_colors["Hex"]}
+    )
+    fig_tree.update_layout(
+        margin=dict(l=0, r=0, t=0, b=0),
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        font_family="Inter"
+    )
+    fig_tree.update_traces(textinfo="label", hovertemplate="<b>%{label}</b><br>Hex: %{color}")
+    st.plotly_chart(fig_tree, use_container_width=True)
+
+
+# ==============================================================================
+# 8. PIE CHART VISUALIZATION (Market Share of Voice)
+# ==============================================================================
+st.write("---")
+st.subheader("Market Share of Voice & Macro Segmentation")
+st.markdown("<p style='font-style: italic; color: #666; font-size: 0.95rem; margin-top: -10px; margin-bottom: 20px;'>A structural breakdown of subcultural dominance filtered by seasonal or longevity lifecycles.</p>", unsafe_allow_html=True)
+
+filter_choice = st.selectbox(
+    "Analyze Market Segmentation By:",
+    ["Aesthetic Longevity Lifecycle", "Seasonal Dominance Pattern"]
+)
+
+pie_cols = st.columns([2, 1])
+
+with pie_cols[0]:
+    if filter_choice == "Aesthetic Longevity Lifecycle":
+        df_pie = df.groupby("LongevityPredictor").size().reset_index(name="Count")
+        fig_pie = px.pie(
+            df_pie, values="Count", names="LongevityPredictor", hole=0.6,
+            color_discrete_sequence=["#D4AF37", "#1A1A1A", "#8ACE00", "#8A8A8A"]
+        )
+    else:
+        df_pie = df.groupby("Season").size().reset_index(name="Count")
+        fig_pie = px.pie(
+            df_pie, values="Count", names="Season", hole=0.6,
+            color_discrete_sequence=["#8A8A8A", "#FFC0CB", "#3A3B3C", "#556B2F"]
+        )
+
+    fig_pie.update_layout(
+        margin=dict(l=10, r=10, t=10, b=10),
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        font_family="Inter",
+        font_color="#1A1A1A",
+        legend=dict(orientation="v", yanchor="center", y=0.5, xanchor="left", x=1.02, font=dict(size=12))
+    )
+    
+    fig_pie.update_traces(
+        textposition="inside", textinfo="percent", insidetextorientation="radial",
+        marker=dict(line=dict(color="#FCFBF7", width=3)),
+        hovertemplate="<b>%{label}</b><br>Share: %{percent}<extra></extra>"
+    )
+    st.plotly_chart(fig_pie, use_container_width=True)
+
+with pie_cols[1]:
+    st.markdown("""
+    <div style="background-color: #FFFFFF; border: 1px solid #EBE9E1; border-radius: 12px; padding: 24px; height: 100%; display: flex; flex-direction: column; justify-content: center;">
+        <h4 style="font-family: 'Playfair Display', serif; font-size: 1.2rem; margin-top: 0; margin-bottom: 12px;">Strategic Insights</h4>
+        <p style="font-size: 0.88rem; color: #4A4A4A; line-height: 1.6; margin-bottom: 14px;">
+            This distribution dynamic maps how consumer attention budgets are split. Brands should use this breakdown to balance their product assortments.
+        </p>
+        <p style="font-size: 0.85rem; color: #76746E; font-style: italic; line-height: 1.5; border-left: 2px solid #EBE9E1; padding-left: 12px; margin-bottom: 0;">
+            <strong>Pro Tip:</strong> High-impact flash trends should never occupy more than 15% of your manufacturing volume, while Stable Cores can safely hold up to 60%.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
