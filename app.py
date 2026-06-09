@@ -94,7 +94,7 @@ st.write("---")
 
 
 # ==============================================================================
-# 4. MOODBOARD GRID SYSTEM (Fixed HTML rendering)
+# 4. MOODBOARD GRID SYSTEM (Updated for 3-color palettes)
 # ==============================================================================
 st.subheader("Current Aesthetics Overview")
 
@@ -124,12 +124,16 @@ for index, row in df.iterrows():
                 font-size: 1.6rem;
                 color: #1A1A1A;
             }}
+            .palette-container {{
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }}
             .color-dot {{
-                height: 16px;
-                width: 16px;
+                height: 20px;
+                width: 20px;
                 border-radius: 50%;
                 display: inline-block;
-                margin-right: 10px;
                 border: 1px solid rgba(0, 0, 0, 0.08);
             }}
             hr {{
@@ -160,15 +164,19 @@ for index, row in df.iterrows():
             
             <hr>
             
-            <div style="display: flex; align-items: center;">
-                <span class="color-dot" style="background-color: {row['Color']};"></span>
-                <span style="font-family: monospace; font-size: 0.8rem; color: #76746E; letter-spacing: 0.05em;">{row['Color']}</span>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="text-transform: uppercase; font-size: 0.75rem; color: #76746E; letter-spacing: 0.03em; font-weight: 500;">Palette:</span>
+                <div class="palette-container">
+                    <span class="color-dot" style="background-color: {row['Color1']};" title="{row['Color1']}"></span>
+                    <span class="color-dot" style="background-color: {row['Color2']};" title="{row['Color2']}"></span>
+                    <span class="color-dot" style="background-color: {row['Color3']};" title="{row['Color3']}"></span>
+                </div>
             </div>
         </div>
         """
         
-        # Use Streamlit's HTML component to render the custom card securely
-        st.components.v1.html(card_html, height=330, scrolling=False)
+        # Render the custom card using Streamlit Components
+        st.components.v1.html(card_html, height=340, scrolling=False)
 
 # ==============================================================================
 # 5. DATA VISUALIZATION SECTION
