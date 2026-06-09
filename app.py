@@ -475,12 +475,176 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
+# Build columns cleanly
 rec_inputs = st.columns(3)
 
+# Open individual context blocks by accessing the list index elements
 with rec_inputs[0]:
     vibe_profile = st.selectbox(
         "Select Your Core Architecture:",
         ["Minimal & Sharp", "Romantic & Nostalgic", "Rebellious & Raw", "Cozy & Heritage"]
     )
 
-with rec_inputs
+with rec_inputs[1]:
+    color_profile = st.selectbox(
+        "Select Your Visual Palette:",
+        ["Monochrome & Neutrals", "Pastels & Soft Whites", "Vibrant & High-Contrast", "Earth Tones & Muted Greens"]
+    )
+
+with rec_inputs[2]:
+    wardrobe_staple = st.selectbox(
+        "Select Your Key Wardrobe Piece:",
+        ["Tailored Blazers / Eyewear", "Ribbons / Lace / Corsets", "Cargo Skirts / Asymmetry", "Oversized Knits / Corduroy"]
+    )
+
+st.markdown("<br>", unsafe_allow_html=True)
+trigger_recommendation = st.button("Generate Style Alignment Report", use_container_width=True)
+
+if trigger_recommendation:
+    matched_aesthetic = "Old Money" # Safe fallback asset default
+    
+    if vibe_profile == "Minimal & Sharp":
+        if color_profile == "Monochrome & Neutrals" or "Blazers" in wardrobe_staple:
+            matched_aesthetic = "Office Siren" if "Blazers" in wardrobe_staple else "Acubi"
+        else:
+            matched_aesthetic = "Clean Girl"
+            
+    elif vibe_profile == "Romantic & Nostalgic":
+        matched_aesthetic = "Coquette" if "Ribbons" in wardrobe_staple else "Balletcore"
+        
+    elif vibe_profile == "Rebellious & Raw":
+        matched_aesthetic = "Brat" if "High-Contrast" in color_profile else "Y2K"
+        
+    elif vibe_profile == "Cozy & Heritage":
+        matched_aesthetic = "Eclectic Grandpa" if "Knits" in wardrobe_staple else "Old Money"
+
+    # Querying matching item from data system
+    matched_row = df[df["Aesthetic"] == matched_aesthetic].iloc[0]
+    final_img_base64 = get_base64_image(matched_row['Image1'])
+
+    # Premium layout rendering frame
+    editorial_spread_html = f"""
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600&display=swap');
+        
+        .spread-container {{
+            background: #FFFFFF;
+            border: 1px solid #EBE9E1;
+            border-radius: 12px;
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+            color: #1A1A1A;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            margin-top: 10px;
+        }}
+        
+        .spread-cover {{
+            width: 100%;
+            height: 480px;
+            object-fit: cover;
+            background: #EBE9E1;
+        }}
+        
+        .spread-editorial {{
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }}
+        
+        .spread-tag {{
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #76746E;
+            letter-spacing: 0.15em;
+            margin-bottom: 8px;
+            display: block;
+        }}
+        
+        .spread-title {{
+            font-family: 'Playfair Display', serif !important;
+            font-size: 2.4rem;
+            font-weight: 400 !important;
+            margin: 0 0 20px 0;
+            line-height: 1.1;
+        }}
+        
+        .spread-quote {{
+            font-size: 1.05rem;
+            line-height: 1.6;
+            color: #4A4A4A;
+            font-style: italic;
+            border-left: 3px solid #1A1A1A;
+            padding-left: 20px;
+            margin: 0 0 28px 0;
+        }}
+        
+        .meta-spec {{
+            font-size: 0.88rem;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }}
+        
+        .meta-label {{
+            text-transform: uppercase;
+            font-size: 0.72rem;
+            color: #76746E;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+            display: inline-block;
+            width: 100px;
+        }}
+        
+        .dot-group {{
+            display: inline-flex;
+            gap: 6px;
+            vertical-align: middle;
+        }}
+        
+        .mini-dot {{
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 1px solid rgba(0,0,0,0.08);
+            display: inline-block;
+        }}
+    </style>
+    
+    <div class="spread-container">
+        <img class="spread-cover" src="{final_img_base64}">
+        <div class="spread-editorial">
+            <span class="spread-tag">Your Aesthetic Identity</span>
+            <h2 class="spread-title">{matched_row['Aesthetic']}</h2>
+            <p class="spread-quote">"{matched_row['VibeCheck']}"</p>
+            
+            <div class="meta-spec">
+                <span class="meta-label">Essentials:</span>
+                <span style="color: #1A1A1A;">{matched_row['CoreElements']}</span>
+            </div>
+            
+            <div class="meta-spec">
+                <span class="meta-label">Key Brands:</span>
+                <span style="color: #1A1A1A;">{matched_row['KeyBrands']}</span>
+            </div>
+            
+            <div class="meta-spec" style="margin-bottom: 24px;">
+                <span class="meta-label">Forecast:</span>
+                <span style="background: #EBE9E1; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 500;">
+                    {matched_row['LongevityPredictor']}
+                </span>
+            </div>
+            
+            <div style="border-top: 1px solid #EBE9E1; padding-top: 20px; display: flex; align-items: center; justify-content: space-between;">
+                <span class="meta-label" style="width: auto;">Signature Palette:</span>
+                <div class="dot-group">
+                    <span class="mini-dot" style="background-color: {matched_row['Color1']};"></span>
+                    <span class="mini-dot" style="background-color: {matched_row['Color2']};"></span>
+                    <span class="mini-dot" style="background-color: {matched_row['Color3']};"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    """
+    st.components.v1.html(editorial_spread_html, height=500, scrolling=False)
